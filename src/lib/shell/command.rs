@@ -34,10 +34,10 @@ pub fn mv(source_path: &str, destination_path: &str) {
 
 pub fn rm(source_path: &str) {
     match fs::remove_dir_all(source_path) {
-        Ok(msg) => {
+        Ok(_msg) => {
             
         },
-        Err(error) => {
+        Err(_error) => {
             fs::remove_file(source_path).expect("Cant remove the file or directory");
         }
     }

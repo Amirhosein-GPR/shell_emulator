@@ -5,7 +5,7 @@ pub fn record(command: String) {
     let mut pcb_records = String::new();
 
     let mut file = File::open("./pcb/pcb.conf");
-    if let Err(error) = file {
+    if let Err(_error) = file {
         create_new_pcb_file();
         file = File::open("./pcb/pcb.conf");
     }
@@ -15,7 +15,7 @@ pub fn record(command: String) {
 
     let pcb_records = pcb_records.split('-').collect::<Vec<&str>>();
 
-    let mut last_pcb_record: Vec<&str>;
+    let last_pcb_record: Vec<&str>;
     last_pcb_record = pcb_records.last().unwrap().split(' ').collect::<Vec<&str>>();
 
     let mut last_id: u16 = 0;
@@ -30,7 +30,7 @@ pub fn log() {
     let mut pcb_records = String::new();
 
     let mut file = File::open("./pcb/pcb.conf");
-    if let Err(error) = file {
+    if let Err(_error) = file {
         create_new_pcb_file();
         file = File::open("./pcb/pcb.conf");
     }

@@ -1,6 +1,6 @@
 use std::env;
 use std::io;
-use std::io::{Read, Write};
+use std::io::{Write};
 
 mod command;
 mod pcb;
@@ -12,9 +12,8 @@ pub fn run() {
     
     loop {
         manage_commands(&mut shell_text);
-        manage_pcb();
         print!("{}", shell_text);
-        io::stdout().flush();
+        io::stdout().flush().expect("Error flushing stdout");
     }
 }
 
@@ -25,14 +24,14 @@ fn initilize() -> String{
 
     print!("{}", CLEAR_CODE);
     print!("{}", shell_text);
-    io::stdout().flush();
+    io::stdout().flush().expect("Error flushing stdout");
     shell_text
 }
 
 fn manage_commands(shell_text: &mut String) {
     let mut full_command = String::new();
-    let mut extracted_command = String::new();
-    io::stdin().read_line(&mut full_command);
+    let mut extracted_command: String;
+    io::stdin().read_line(&mut full_command).expect("Error reading command from terminal");
     extracted_command = full_command.clone();
 
     let mut command_first_argument: &str = "";
@@ -45,7 +44,6 @@ fn manage_commands(shell_text: &mut String) {
         command_first_argument = vec_str.get(1).unwrap().trim();
         if vec_str.len() == 3 {
             command_second_argument = vec_str.last().unwrap().trim();
-            println!("Third : {}", command_second_argument);
         }
     }
 
@@ -95,8 +93,4 @@ fn manage_commands(shell_text: &mut String) {
         }
     }
     pcb::record(extracted_command);
-}
-
-fn manage_pcb() {
-
 }
