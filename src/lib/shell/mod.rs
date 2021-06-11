@@ -9,9 +9,13 @@ const CLEAR_CODE: &str = "\x1B[2J\x1B[1;1H";
 
 pub fn run() {
     let mut shell_text = initilize();
-    
+
+    let exe_dir = env::current_dir().unwrap();
+    let mut pcb_file_location = String::from(exe_dir.to_str().unwrap());
+    pcb_file_location.push_str("/pcb/pcb.conf");
+
     loop {
-        manage_commands(&mut shell_text);
+        manage_commands(&mut shell_text, &pcb_file_location);
         print!("{}", shell_text);
         io::stdout().flush().expect("Error flushing stdout");
     }
@@ -28,7 +32,7 @@ fn initilize() -> String{
     shell_text
 }
 
-fn manage_commands(shell_text: &mut String) {
+fn manage_commands(shell_text: &mut String, pcb_file_location: &String) {
     let mut full_command = String::new();
     let mut extracted_command: String;
     io::stdin().read_line(&mut full_command).expect("Error reading command from terminal");
@@ -52,7 +56,7 @@ fn manage_commands(shell_text: &mut String) {
             command::pwd();
         },
         "history" => {
-            pcb::log();
+            pcb::log(pcb_file_location);
         },
         "ls" => {
             command::ls();
@@ -92,5 +96,5 @@ fn manage_commands(shell_text: &mut String) {
             return;
         }
     }
-    pcb::record(extracted_command);
+    pcb::record(extracted_command, pcb_file_location);
 }

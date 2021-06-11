@@ -1,13 +1,14 @@
 use std::fs::File;
 use std::io::{Read, Write};
 use std::fs::OpenOptions;
-pub fn record(command: String) {
+
+pub fn record(command: String, pcb_file_location: &String) {
     let mut pcb_records = String::new();
 
-    let mut file = File::open("./pcb/pcb.conf");
+    let mut file = File::open(pcb_file_location);
     if let Err(_error) = file {
-        create_new_pcb_file();
-        file = File::open("./pcb/pcb.conf");
+        create_new_pcb_file(pcb_file_location);
+        file = File::open(pcb_file_location);
     }
     let mut file = file.unwrap();
 
@@ -23,16 +24,16 @@ pub fn record(command: String) {
         last_id = id;
     }
     
-    create_new_pcb_record(last_id + 1, command);
+    create_new_pcb_record(last_id + 1, command, pcb_file_location);
 }
 
-pub fn log() {
+pub fn log(pcb_file_location: &String) {
     let mut pcb_records = String::new();
 
-    let mut file = File::open("./pcb/pcb.conf");
+    let mut file = File::open(pcb_file_location);
     if let Err(_error) = file {
-        create_new_pcb_file();
-        file = File::open("./pcb/pcb.conf");
+        create_new_pcb_file(pcb_file_location);
+        file = File::open(pcb_file_location);
     }
     let mut file = file.unwrap();
 
@@ -47,15 +48,15 @@ pub fn log() {
     }
 }
 
-fn create_new_pcb_file() {
+fn create_new_pcb_file(pcb_file_location: &String) {
     let pcb_record_template = "#-process_id process_name process_creation_date(UTC)\n";
 
-    File::create("./pcb/pcb.conf").expect("Error creating the pcb.conf file")
+    File::create(pcb_file_location).expect("Error creating the pcb.conf file")
         .write(&pcb_record_template.as_bytes())
         .expect("Error writing to the file after opening it");
 }
 
-fn create_new_pcb_record(id: u16, command: String) {
+fn create_new_pcb_record(id: u16, command: String, pcb_file_location: &String) {
     let mut pcb_record = String::from("-");
 
     pcb_record.push_str(id.to_string().as_str());
@@ -65,7 +66,7 @@ fn create_new_pcb_record(id: u16, command: String) {
     pcb_record.push_str(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs().to_string().as_str());
     pcb_record.push('\n');
 
-    OpenOptions::new().append(true).open("./pcb/pcb.conf")
+    OpenOptions::new().append(true).open(pcb_file_location)
         .expect("Error creating the pcb.conf file")
         .write(&pcb_record.as_bytes())
         .expect("Error writing to the file after opening it");
