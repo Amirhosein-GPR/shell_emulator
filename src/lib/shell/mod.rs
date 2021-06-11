@@ -53,13 +53,13 @@ fn manage_commands(shell_text: &mut String, pcb_file_location: &String) {
 
     match extracted_command.trim() {
         "pwd" => {
-            command::pwd();
+            command::pwd(command_first_argument);
         },
         "history" => {
-            pcb::log(pcb_file_location);
+            pcb::log(pcb_file_location, command_first_argument);
         },
         "ls" => {
-            command::ls();
+            command::ls(command_first_argument);
         },
         "mkdir" => {
             command::mkdir(command_first_argument);
@@ -87,10 +87,10 @@ fn manage_commands(shell_text: &mut String, pcb_file_location: &String) {
             command::vim(command_first_argument);
         },
         "clear" => {
-            command::clear(CLEAR_CODE);
+            command::clear(CLEAR_CODE, command_first_argument);
         },
         "exit" => {
-            command::exit();
+            command::exit(command_first_argument);
         },
         _ => {
             return;

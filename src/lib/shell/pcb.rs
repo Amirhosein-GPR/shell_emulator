@@ -27,7 +27,12 @@ pub fn record(command: String, pcb_file_location: &String) {
     create_new_pcb_record(last_id + 1, command, pcb_file_location);
 }
 
-pub fn log(pcb_file_location: &String) {
+pub fn log(pcb_file_location: &String, first_argument: &str) {
+    if first_argument == "--help" {
+        println!("history: shows the recent run commands");
+        return;
+    }
+    
     let mut pcb_records = String::new();
 
     let mut file = File::open(pcb_file_location);
