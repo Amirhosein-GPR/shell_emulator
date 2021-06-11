@@ -59,15 +59,21 @@ pub fn cd(destination_path: &str) {
 
 pub fn cat(source_path: &str) {
     let mut file_content = String::new();
-    if let Err(_error) = fs::File::open(source_path).unwrap().read_to_string(&mut file_content) {
-        println!("Can't open the file (Maybe invalid path ?)");
+    if let Ok(mut file) = fs::File::open(source_path) {
+        if let Err(_error) = file.read_to_string(&mut file_content) {
+            println!("Error can't read file to string");
+        } else {
+            println!("{}", file_content);
+        }
     } else {
-        println!("{}", file_content);
+        println!("Can't open the file (Maybe invalid path ?)");
     }
 }
 
 pub fn vim(source_path: &str) {
-    Command::new("vim").arg(source_path).spawn().expect("Can't open the file by vim");
+    if let Err(_error) = Command::new("vim").arg(source_path).spawn() {
+        println!("Can't open the file by vim (Is it installed ?)");
+    }
 }
 
 pub fn clear(clear_code: &str) {
