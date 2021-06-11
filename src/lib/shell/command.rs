@@ -18,40 +18,52 @@ pub fn ls() {
 }
 
 pub fn mkdir(source_path: &str) {
-    fs::create_dir(source_path).expect("Can't create the directory");
-    println!("Dir : {} was created", source_path);
+    if let Err(_error) = fs::create_dir(source_path) {
+        println!("Can't create the directory");
+    } else {
+        println!("Dir : {} was created", source_path);
+    }
 }
 
 pub fn touch(source_path: &str) {
-    fs::File::create(source_path).expect("Can't create the file");
-    println!("File : {} was created", source_path);
+    if let Err(_error) = fs::File::create(source_path) {
+        println!("Can't create the file");
+    } else {
+        println!("File : {} was created", source_path);
+    }
 }
 
 pub fn mv(source_path: &str, destination_path: &str) {
-    fs::rename(source_path, destination_path).expect("Can't move the file");
-    println!("File : {} was moved to : {}", source_path, destination_path);
+    if let Err(_error) = fs::rename(source_path, destination_path) {
+        println!("Can't move the file (Maybe invalid input?)");
+    } else {
+        println!("File : {} was moved to : {}", source_path, destination_path);
+    }
 }
 
 pub fn rm(source_path: &str) {
-    match fs::remove_dir_all(source_path) {
-        Ok(_msg) => {
-            
-        },
-        Err(_error) => {
-            fs::remove_file(source_path).expect("Cant remove the file or directory");
+    if let Err(_error) = fs::remove_dir_all(source_path) {
+        if let Err(_error) = fs::remove_file(source_path) {
+            println!("Cant remove the file or directory (Maybe invalid input?)");
         }
+    } else {
+        println!("File : {} was removed", source_path);
     }
-    println!("File : {} was removed", source_path);
 }
 
 pub fn cd(destination_path: &str) {
-    env::set_current_dir(destination_path).expect("Can't change directory");
+    if let Err(_error) = env::set_current_dir(destination_path) {
+        println!("Invalid Path");
+    }
 }
 
 pub fn cat(source_path: &str) {
     let mut file_content = String::new();
-    fs::File::open(source_path).unwrap().read_to_string(&mut file_content).expect("Can't open the file");
-    println!("{}", file_content);
+    if let Err(_error) = fs::File::open(source_path).unwrap().read_to_string(&mut file_content) {
+        println!("Can't open the file (Maybe invalid path ?)");
+    } else {
+        println!("{}", file_content);
+    }
 }
 
 pub fn vim(source_path: &str) {
